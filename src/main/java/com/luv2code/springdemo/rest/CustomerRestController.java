@@ -41,9 +41,26 @@ public class CustomerRestController {
         return customer;
     }
 
+    @PutMapping("/customers")
+    public Customer updateCustomer(@RequestBody Customer customer){
+
+        customerService.saveCustomer(customer);
+
+        return customer;
+    }
+
     @DeleteMapping("/customers/{customerId}")
-    public void deleteCustomer(@PathVariable Integer customerId) {
+    public String deleteCustomer(@PathVariable Integer customerId) {
+
+        Customer customer = customerService.getCustomer(customerId);
+
+        if (customer == null){
+            throw new CustomerNotFoundException("Customer with ID - " + customerId + " not found!");
+        }
+
         customerService.deleteCustomer(customerId);
+
+        return "Deleted Customer  id - " + customerId;
     }
 
 }
