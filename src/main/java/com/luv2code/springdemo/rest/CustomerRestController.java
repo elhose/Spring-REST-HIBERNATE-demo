@@ -15,30 +15,36 @@ public class CustomerRestController {
     private CustomerService customerService;
 
     @GetMapping("/customers")
-    public List<Customer> getCustomers(){
+    public List<Customer> getCustomers() {
         return customerService.getCustomers();
     }
 
     @GetMapping("/customers/{customerId}")
-    public Customer getCustomer(@PathVariable Integer customerId){
-        return customerService.getCustomer(customerId);
+    public Customer getCustomer(@PathVariable Integer customerId) {
+
+        Customer customer = customerService.getCustomer(customerId);
+
+        if (customer == null) {
+            throw new CustomerNotFoundException("Customer with ID  - " + customerId + " not found");
+        }
+
+        return customer;
     }
 
     @PostMapping("/customers")
-    public void addCustomer(){
-        Customer customer = new Customer();
-        customer.setFirstName("Marian");
-        customer.setLastName("Kowalski");
-        customer.setEmail("wielGAB0LZGA@WP.pl");
+    public Customer addCustomer(@RequestBody Customer customer) {
+
+        customer.setId(0);
 
         customerService.saveCustomer(customer);
+
+        return customer;
     }
 
     @DeleteMapping("/customers/{customerId}")
-    public void deleteCustomer(@PathVariable Integer customerId){
+    public void deleteCustomer(@PathVariable Integer customerId) {
         customerService.deleteCustomer(customerId);
     }
-
 
 }
 
